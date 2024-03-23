@@ -17,6 +17,7 @@ import com.mycustomappapply.wotttoo.R
 import com.mycustomappapply.wotttoo.base.BaseFragment
 import com.mycustomappapply.wotttoo.data.local.SharedPreferencesManager
 import com.mycustomappapply.wotttoo.databinding.FragmentEditProfileBinding
+import com.mycustomappapply.wotttoo.models.CurrentUSerResponse
 import com.mycustomappapply.wotttoo.models.User
 import com.mycustomappapply.wotttoo.ui.viewmodels.AuthViewModel
 import com.mycustomappapply.wotttoo.ui.viewmodels.UserViewModel
@@ -31,7 +32,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class EditUserFragment : BaseFragment<FragmentEditProfileBinding>() {
-    private val args by navArgs<EditUserFragmentArgs>()
+
+    private val args: EditUserFragmentArgs by navArgs<EditUserFragmentArgs>()
     private val userViewModel: UserViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
     lateinit var sharedPreferencesManager: SharedPreferencesManager
@@ -41,27 +43,29 @@ class EditUserFragment : BaseFragment<FragmentEditProfileBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
-        sharedPreferencesManager= SharedPreferencesManager(requireContext())
+        sharedPreferencesManager= SharedPreferencesManager(view.context)
         setupUi()
         subscribeObservers()
     }
 
     private fun setupUi() = with(binding) {
-/*        usernameEditText.setText(args.user?.username)
+
+        usernameEditText.setText(args.user?.username)
         bioEditText.setText(args.user?.bio)
-        fullnameEditText.setText(args.user?.fullname)*/
-        // maxCharactersTextView.text = "${args.user?.bio?.length}/150"
+        fullnameEditText.setText(args.user?.fullname)
+        maxCharactersTextView.text = "${args.user?.bio?.length}/150"
+
         bioEditText.addTextChangedListener {
             maxCharactersTextView.text = "${it.toString().length}/150"
         }
     }
 
     private fun subscribeObservers(): Unit = with(binding) {
-        userViewModel.user.observe(viewLifecycleOwner) {
-            when (it) {
+
+        userViewModel.user.observe(viewLifecycleOwner) {dataState: DataState<CurrentUSerResponse> ->
+            when (dataState) {
                 is DataState.Success -> {
                     updateProfileErrorTextView.gone()
-                    //showToast(it.data!!.message!!)
                     parentFragmentManager.setFragmentResult(
                         TEXT_UPDATED_USER,
                         bundleOf(TEXT_UPDATED_USER to updatedUser)
@@ -71,9 +75,9 @@ class EditUserFragment : BaseFragment<FragmentEditProfileBinding>() {
 
                 is DataState.Fail -> {
                     updateProfileErrorTextView.visible()
-                    updateProfileErrorTextView.text = it.message
+                    updateProfileErrorTextView.text = dataState.message
                     menuItem?.actionView = null
-                    showToast(it.message)
+                    showToast(dataState.message)
                 }
             }
         }
@@ -92,7 +96,7 @@ class EditUserFragment : BaseFragment<FragmentEditProfileBinding>() {
     ): Boolean {
         if (item.itemId == R.id.edit_profile_save_menu_item) {
             menuItem = item
-          //item.setActionView(R.layout.progress_bar_layout)
+            // item.setActionView(R.layout.progress_bar_layout)
             updateUser()
             navigateBack()
             return true
@@ -128,7 +132,7 @@ class EditUserFragment : BaseFragment<FragmentEditProfileBinding>() {
                   }
 
             authViewModel.currentUser = authViewModel.currentUser?.copy(username = username)
-            userViewModel.createUser(username, fullName, bio)
+
         }
 
     }

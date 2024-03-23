@@ -77,7 +77,11 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(), BottomNavRes
 
         val userBind: Attributes? = user?.attributes
 
-        val username: String? =shrPref.getData("username")
+        val username: String =shrPref.getData("username") ?: ""
+        val fullName: String =shrPref.getData("fullName") ?: ""
+        val bio: String =shrPref.getData("bio") ?: ""
+
+        userViewModel.createUser(username, fullName, bio)
 
         usernameTextView.text=username
         usernameTextView.text = when (shrPref.getData("username")) {
