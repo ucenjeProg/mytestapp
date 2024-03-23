@@ -15,11 +15,6 @@ import com.mycustomappapply.wotttoo.models.Quote
 
 class HomeAdapter() : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
 
-    companion object {
-        const val BG_IMAGE: Int = 1
-        const val BG_COLOR: Int = 0
-    }
-
     var currentUserId: String? = null
 
     var onUserClickListener: ((String) -> Unit)? = null

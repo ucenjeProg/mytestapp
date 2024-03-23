@@ -52,4 +52,5 @@ class ColorBoxAdapter(
     }
 
     override fun getItemCount(): Int = photoStyleColors.size
+
 }

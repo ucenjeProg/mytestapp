@@ -30,10 +30,10 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     application: Application,
-    val sharedPreferencesRepository: SharedPreferencesRepository,
+    val shrdPrefMngr: SharedPreferencesRepository,
     val userRepository: UserRepository,
 ) : AndroidViewModel(application) {
-    var hasSignupError = false
+
     var currentUser: UserAuth? = null
 
     private var _isAuthenticated = false
@@ -57,15 +57,15 @@ class AuthViewModel @Inject constructor(
     }
 
     private fun initAuthentication() {
-        val user: UserAuth = sharedPreferencesRepository.getCurrentUser()
+        val user: UserAuth = shrdPrefMngr.getCurrentUser()
         _currentUserId = user.userId
         _isAuthenticated = user.userId != null && user.token != null
         currentUser = user
     }
 
-    fun getFollowingGenres(): String = sharedPreferencesRepository.getFollowingGenres()
+    fun getFollowingGenres(): String = shrdPrefMngr.getFollowingGenres()
 
-    fun logout(): Unit = sharedPreferencesRepository.clearUser()
+    fun logout(): Unit = shrdPrefMngr.clearUser()
 
     fun authorizeWithGoogle(
         email: String,
@@ -88,17 +88,14 @@ class AuthViewModel @Inject constructor(
 
     }
 
-    fun getUser(): UserAuth = sharedPreferencesRepository.getCurrentUser()
+    fun getUser(): UserAuth = shrdPrefMngr.getCurrentUser()
 
     fun saveUser() {
         if (auth.value?.data != null) {
-            sharedPreferencesRepository.saveUser(auth.value?.data)
+            shrdPrefMngr.saveUser(auth.value?.data)
         }
     }
 
-    fun updateUser() {
-        sharedPreferencesRepository.saveUser(currentUser!!)
-    }
 
     private fun handleResponse(
         response: Response<UserAuth>
@@ -142,7 +139,7 @@ class AuthViewModel @Inject constructor(
             if (hasInternetConnection()) {
                 try {
                     _genres.postValue(DataState.Loading())
-                    sharedPreferencesRepository.saveFollowingGenres("time")
+                    shrdPrefMngr.saveFollowingGenres("time")
                     if (userId == null) {
                         _genres.postValue(DataState.Success())
                     } else {

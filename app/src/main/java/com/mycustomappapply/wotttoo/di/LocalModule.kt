@@ -21,9 +21,7 @@ object LocalModule {
     @Named("themeSharedPreferences")
     fun provideSharedPreferences(
         @ApplicationContext context: Context
-    ): SharedPreferences {
-        return context.getSharedPreferences("theme", Context.MODE_PRIVATE)
-    }
+    ): SharedPreferences = context.getSharedPreferences("theme", Context.MODE_PRIVATE)
 
     @Provides
     @Singleton
@@ -31,14 +29,16 @@ object LocalModule {
     fun provideEncryptedSharedPreferences(
         @ApplicationContext context: Context
     ): SharedPreferences {
+
         val masterKey: MasterKey =
             MasterKey.Builder(context).setKeyGenParameterSpec(MasterKeys.AES256_GCM_SPEC).build()
+
         return EncryptedSharedPreferences.create(
-            context,
-            "user",
-            masterKey,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            /* context = */ context,
+            /* fileName = */ "user",
+            /* masterKey = */ masterKey,
+            /* prefKeyEncryptionScheme = */ EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            /* prefValueEncryptionScheme = */ EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
     }
 

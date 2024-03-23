@@ -26,7 +26,7 @@ class NotificationViewModel @Inject constructor(
     application: Application,
     val mainRepository: MainRepository,
 ) : AndroidViewModel(application) {
-    var shouldReadNotifications = false
+
     private val notificationList: MutableList<Notification> = mutableListOf<Notification>()
 
     private val _notifications = MutableLiveData<DataState<NotificationsResponse>>()
@@ -41,8 +41,7 @@ class NotificationViewModel @Inject constructor(
     fun getNotifications(
         page: Int = 1,
         forced: Boolean = false
-    ): Job =
-        viewModelScope.launch(Dispatchers.IO) {
+    ): Job = viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (Utils.hasInternetConnection(getApplication<Application>())) {
                     if (_notifications.value == null || forced) {

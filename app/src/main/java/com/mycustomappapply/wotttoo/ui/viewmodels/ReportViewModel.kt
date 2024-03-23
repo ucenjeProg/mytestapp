@@ -32,7 +32,6 @@ class ReportViewModel @Inject constructor(
     val report: LiveData<DataState<BasicResponse>>
         get() = _report
 
-
     fun reportQuote(
         reporterId: String,
         reportedQuoteId: String
@@ -62,25 +61,6 @@ class ReportViewModel @Inject constructor(
                 val reportBody: Map<String, String> =
                     mapOf("reporterId" to reporterId, "reportedUserId" to reportedUserId)
                 val response: Response<BasicResponse> = mainRepository.reportUser(reportBody)
-                handleReportResponse(response)
-            } else {
-                _report.postValue(DataState.Fail(message = "No internet connection"))
-            }
-        } catch (e: Exception) {
-            _report.postValue(DataState.Fail())
-        }
-    }
-
-    fun reportBook(
-        reporterId: String,
-        reportedBookId: String
-    ): Job = viewModelScope.launch(Dispatchers.IO) {
-        try {
-            if (hasInternetConnection()) {
-                _report.postValue(DataState.Loading())
-                val reportBody: Map<String, String> =
-                    mapOf("reporterId" to reporterId, "reportedBookId" to reportedBookId)
-                val response: Response<BasicResponse> = mainRepository.reportBook(reportBody)
                 handleReportResponse(response)
             } else {
                 _report.postValue(DataState.Fail(message = "No internet connection"))

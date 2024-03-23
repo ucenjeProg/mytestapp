@@ -15,17 +15,15 @@ import dagger.hilt.components.SingletonComponent
 object AuthModule {
 
     @Provides
-    fun provideGoogleSignInOptions(): GoogleSignInOptions {
-        return GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .build()
-    }
+    fun provideGoogleSignInOptions(): GoogleSignInOptions =
+        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestEmail()
+        .build()
 
     @Provides
     fun provideGoogleSignInClient(
         @ApplicationContext context: Context,
         googleSignInOptions: GoogleSignInOptions
-    ): GoogleSignInClient {
-        return GoogleSignIn.getClient(context, googleSignInOptions)
-    }
+    ): GoogleSignInClient = GoogleSignIn.getClient(context, googleSignInOptions)
+
 }

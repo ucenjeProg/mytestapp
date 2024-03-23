@@ -19,12 +19,10 @@ object UtilsModule {
     @Singleton
     fun provideUnsplash(
         @ApplicationContext context: Context
-    ): UnsplashPhotoPicker {
-        return UnsplashPhotoPicker.init(
-            context.applicationContext as Application,
-            Constants.UNSPLASH_ACCESS_KEY,
-            Constants.UNSPLASH_SECRET_KEY
-        )
-    }
+    ): UnsplashPhotoPicker = UnsplashPhotoPicker.init(
+        context.applicationContext as Application,
+        Constants.UNSPLASH_ACCESS_KEY,
+        Constants.UNSPLASH_SECRET_KEY
+    )
 
 }

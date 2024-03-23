@@ -12,14 +12,14 @@ import javax.inject.Singleton
 
 @Singleton
 class MainRepository @Inject constructor(
-    val sharedPreferencesRepository: SharedPreferencesRepository,
+    val shPref: SharedPreferencesRepository,
     val mainApi: MainApi
 ) {
 
     suspend fun getQuotes(
         page: Int
     ): Response<ArticleResponse> {
-        val genres: String = sharedPreferencesRepository.getFollowingGenres()
+        val genres: String = shPref.getFollowingGenres()
         return mainApi.getQuotes()
     }
 
@@ -68,4 +68,5 @@ class MainRepository @Inject constructor(
     ): Response<NotificationsResponse> = mainApi.getNotifications(currentPage)
 
     suspend fun clearNotifications(): Response<NotificationsResponse> = mainApi.clearNotifications()
+
 }

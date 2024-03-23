@@ -33,12 +33,9 @@ class QuoteViewModel @Inject constructor(
 
     private var quoteList: MutableList<Quote> = mutableListOf<Quote>()
     private val _quotes = MutableLiveData<DataState<ArticleResponse>>()
+
     val quotes: LiveData<DataState<ArticleResponse>>
         get() = _quotes
-
-    private val _quotesByGenre = MutableLiveData<DataState<ArticleResponse>>()
-    val quotesByGenre: LiveData<DataState<ArticleResponse>>
-        get() = _quotesByGenre
 
     private val _quote = MutableLiveData<DataState<ArticleResponse>>()
     val quote: LiveData<DataState<ArticleResponse>>
@@ -119,11 +116,9 @@ class QuoteViewModel @Inject constructor(
     }
 
     fun updateQuote(
-
         oldQuote: Quote,
         newQuote: Map<String, String>
-    ): Job =
-        viewModelScope.launch(Dispatchers.IO) {
+    ): Job = viewModelScope.launch(Dispatchers.IO) {
             if (hasInternetConnection()) {
                 try {
                     _updateQuote.postValue(DataState.Loading())
@@ -132,14 +127,6 @@ class QuoteViewModel @Inject constructor(
                         quote = newQuote
                     )
                     val handledResponse: DataState<ArticleResponse> = handleQuoteResponse(response)
-                    val index: Int = quoteList.indexOf(oldQuote)
-                    if (index != -1) {
-                        /*   quoteList.removeAt(index)
-                           val newQuoteModel: Quote =
-                               oldQuote.copy(quote = newQuote["quote"], genre = newQuote["genre"])
-                           quoteList.add(index, newQuoteModel)*/
-                    }
-                    //  _quotes.postValue(DataState.Success(QuoteResponse(quoteList.toList())))
                     _updateQuote.postValue(handledResponse)
                 } catch (e: Exception) {
                     _updateQuote.postValue(DataState.Fail())
@@ -267,12 +254,12 @@ class QuoteViewModel @Inject constructor(
         forced: Boolean = false
     ) {
         when (response.code()) {
+
             Constants.CODE_SUCCESS -> {
-                // Check when there is not any quote
                 if (quoteList.isEmpty() || forced) {
-                    quoteList = response.body()!!.data.toMutableList()
+                    quoteList = response.body()?.data?.toMutableList() ?: mutableListOf<Quote>()
                 } else {
-                    response.body()!!.data.forEach { quote ->
+                    response.body()?.data?.forEach { quote: Quote ->
                         quoteList.add(quote)
                     }
                 }

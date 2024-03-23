@@ -17,12 +17,14 @@ class SharedPreferencesRepository @Inject constructor(
 
 
     fun getCurrentUser(): UserAuth {
+
         val username: String? = sharedPreferences.getString("username", "")
         val email: String? = sharedPreferences.getString("email", "")
         val profileImage: String? = sharedPreferences.getString("profileImage", "")
         val userId: String? = sharedPreferences.getString("userId", null)
         val token: String? = sharedPreferences.getString("token", null)
         val followingGenres: String = sharedPreferences.getString("genres", "") ?: ""
+
         _currentUser = UserAuth(
             username = username,
             email = email,
@@ -32,13 +34,6 @@ class SharedPreferencesRepository @Inject constructor(
             followingGenres = followingGenres.split(",").toList()
         )
         return _currentUser!!
-    }
-
-    fun getToken(): String? {
-        return sharedPreferences.getString(
-            "token",
-            "c2hhMjU2OjI5NjoyYTIzZWM4YzQ2Y2I2NWU1OTY1NDk4NjU4YjA5YzRhMWFmODdkZDFmMjJiZTZkOThkOTRiZmEwMjBlZDAxMDBk"
-        )
     }
 
     fun saveUser(
@@ -54,12 +49,6 @@ class SharedPreferencesRepository @Inject constructor(
             editor.putString("genres", user.followingGenres.toJoinedString())
         }
         editor.apply()
-    }
-
-    fun updateUser(
-        user: UserAuth
-    ) {
-        editor.putString("username", user.username)
     }
 
     fun getFollowingGenres(): String {

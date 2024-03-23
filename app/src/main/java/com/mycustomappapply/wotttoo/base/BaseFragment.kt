@@ -45,9 +45,7 @@ abstract class BaseFragment<VBinding : ViewBinding> : Fragment() {
         findNavController().popBackStack()
     }
 
-    fun getCurrentScreen(): Int? {
-        return findNavController().currentDestination?.id
-    }
+    fun getCurrentScreen(): Int? = findNavController().currentDestination?.id
 
     fun getColor(color: Int): Int = ContextCompat.getColor(requireContext(), color)
 

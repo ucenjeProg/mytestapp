@@ -10,7 +10,7 @@ import okhttp3.Response
 import javax.inject.Inject
 
 class MyOkHttpClientInterceptor @Inject constructor(
-    private val sharedPreferencesRepository: SharedPreferencesRepository
+    private val shrPrefMngr: SharedPreferencesRepository
 ) : Interceptor {
 
     companion object {
@@ -22,12 +22,7 @@ class MyOkHttpClientInterceptor @Inject constructor(
     override fun intercept(
         chain: Interceptor.Chain
     ): Response {
-
-        val mediaType: MediaType? = "text/plain".toMediaTypeOrNull()
-        val body: RequestBody = RequestBody.create(mediaType, "")
-
         val request: Request = chain.request()
-        val token: String? = sharedPreferencesRepository.getToken()
 
         val updatedRequest: Request = request.newBuilder()
             .addHeader(HEADER_AUTHORIZATION, "$BEARER $TOKEN")

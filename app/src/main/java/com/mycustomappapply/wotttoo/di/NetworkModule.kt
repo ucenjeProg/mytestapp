@@ -19,18 +19,15 @@ import javax.inject.Singleton
 object NetworkModule {
 
     @Provides
-    fun provideGsonConverterFactory(): GsonConverterFactory {
-        return GsonConverterFactory.create()
-    }
-
+    fun provideGsonConverterFactory(): GsonConverterFactory = GsonConverterFactory.create()
 
     @Provides
     fun provideOkHttpClient(
         myOkHttpClientInterceptor: MyOkHttpClientInterceptor,
     ): OkHttpClient {
+
         val loggingInterceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
-            //level = HttpLoggingInterceptor.Level.BASIC
         }
 
         return OkHttpClient.Builder()
@@ -44,29 +41,23 @@ object NetworkModule {
     fun provideMainRetrofit(
         gsonConverterFactory: GsonConverterFactory,
         client: OkHttpClient
-    ): Retrofit {
-        return Retrofit.Builder()
-            .addConverterFactory(gsonConverterFactory)
-            .baseUrl(API_URL)
-            .client(client)
-            .build()
-    }
+    ): Retrofit = Retrofit.Builder()
+        .addConverterFactory(gsonConverterFactory)
+        .baseUrl(API_URL)
+        .client(client)
+        .build()
 
     @Provides
     @Singleton
     fun provideMainApi(
         retrofit: Retrofit
-    ): MainApi {
-        return retrofit.create(MainApi::class.java)
-    }
+    ): MainApi = retrofit.create(MainApi::class.java)
 
 
     @Provides
     @Singleton
     fun provideAuthApi(
         retrofit: Retrofit
-    ): AuthApi {
-        return retrofit.create(AuthApi::class.java)
-    }
+    ): AuthApi = retrofit.create(AuthApi::class.java)
 
 }

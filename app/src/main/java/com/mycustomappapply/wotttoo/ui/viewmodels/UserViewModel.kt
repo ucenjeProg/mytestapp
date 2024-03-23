@@ -33,8 +33,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
-    val sharedPreferencesRepository: SharedPreferencesRepository,
-    val userRepository: UserRepository, application: Application,
+    val shrdPrefMngr: SharedPreferencesRepository,
+    val userRepository: UserRepository,
+    application: Application,
 ) : AndroidViewModel(application) {
 
     private var userQuoteList: MutableList<Quote> = mutableListOf<Quote>()
@@ -43,10 +44,6 @@ class UserViewModel @Inject constructor(
     private val _user = MutableLiveData<DataState<CurrentUSerResponse>>()
     val user: LiveData<DataState<CurrentUSerResponse>>
         get() = _user
-
-    private val _userFollow = MutableLiveData<DataState<UsersResponse>>()
-    val userFollow: LiveData<DataState<UsersResponse>>
-        get() = _userFollow
 
     private val _userQuotes = MutableLiveData<DataState<ArticleResponse>>()
     val userQuotes: LiveData<DataState<ArticleResponse>>
@@ -60,12 +57,11 @@ class UserViewModel @Inject constructor(
     fun getMoreUserQuotes(
         userId: String? = null,
         page: Int
-    ): Job =
-        viewModelScope.launch(Dispatchers.IO) {
+    ): Job = viewModelScope.launch(Dispatchers.IO) {
             if (hasInternetConnection()) {
                 try {
                     _userQuotes.postValue(DataState.Loading())
-                    val id: String = userId ?: sharedPreferencesRepository.getCurrentUser()?.userId!!
+                    val id: String = userId ?: shrdPrefMngr.getCurrentUser()?.userId!!
                     val response: Response<ArticleResponse> = userRepository.getMoreUserQuotes(id, page)
                     handleQuoteResponse(response)
                 } catch (e: Exception) {
@@ -80,14 +76,11 @@ class UserViewModel @Inject constructor(
     fun getUser(
         userId: String? = null,
         forced: Boolean = false
-    ): Job =
-        viewModelScope.launch(Dispatchers.IO) {
+    ): Job = viewModelScope.launch(Dispatchers.IO) {
             if (hasInternetConnection()) {
                 try {
                     if (_user.value == null || forced) {
                         _user.postValue(DataState.Loading())
-                        //val id: String = userId ?: sharedPreferencesRepository.getCurrentUser().userId!!
-                        //tvoj pocetni profil
                         val response: Response<CurrentUSerResponse> = userRepository.getUser("296")
                         val handledResponse: DataState<CurrentUSerResponse> = handleUsersResponse(response)
                         _user.postValue(handledResponse)
@@ -105,7 +98,6 @@ class UserViewModel @Inject constructor(
         quote: Quote
     ) {
         userQuoteList.remove(quote)
-        //_userQuotes.postValue(DataState.Success(data = QuoteResponse(userQuoteList.toList())))
     }
 
     fun notifyQuoteUpdated(
@@ -119,7 +111,6 @@ class UserViewModel @Inject constructor(
                     userQuoteList.remove(quoteToDelete)
                     userQuoteList.add(index, quote)
                 }
-                //_userQuotes.postValue(DataState.Success(QuoteResponse(userQuoteList.toList())))
             } catch (e: Exception) {
                 _userQuotes.postValue(DataState.Fail())
             }
@@ -133,9 +124,7 @@ class UserViewModel @Inject constructor(
         searchQuery: String = "",
         paginating: Boolean = false,
         currentPage: Int = 1
-    ): Job =
-
-        viewModelScope.launch(Dispatchers.IO) {
+    ): Job = viewModelScope.launch(Dispatchers.IO) {
             if (hasInternetConnection()) {
                 try {
                     _users.postValue(DataState.Loading())
@@ -145,7 +134,7 @@ class UserViewModel @Inject constructor(
 
                         CODE_SUCCESS -> {
                             if (paginating) {
-                                response.body()?.data?.forEach { user ->
+                                response.body()?.data?.forEach { user: User ->
                                     usersList.add(user)
                                 }
                             } else {
@@ -176,25 +165,6 @@ class UserViewModel @Inject constructor(
         }
 
 
-    fun followOrUnFollowUser(
-        user: User
-    ): Job = viewModelScope.launch(Dispatchers.IO) {
-        if (hasInternetConnection()) {
-            try {
-               /* _userFollow.postValue(DataState.Loading())
-                val response: Response<UsersResponse> = userRepository.followOrUnFollowUser(user.id)
-                val handledResponse: DataState<UsersResponse> = handleUsersResponse(response)
-                _userFollow.postValue(handledResponse)*/
-            } catch (e: Exception) {
-                _userFollow.postValue(DataState.Fail())
-            }
-        } else {
-            _userFollow.postValue(DataState.Fail(message = "No internet connection"))
-        }
-
-    }
-
-
     fun updateUser(
         username: String,
         fullname: String,
@@ -202,17 +172,17 @@ class UserViewModel @Inject constructor(
     ): Job = viewModelScope.launch(Dispatchers.IO) {
         try {
             if (hasInternetConnection()) {
-/*                _user.postValue(DataState.Loading())
-                val body: Map<String, String> = mapOf("username" to username, "fullname" to fullname, "bio" to bio)
-                val response: Response<UsersResponse> = userRepository.updateUser(body)
-                val handledResponse: DataState<UsersResponse> = handleUsersResponse(response, true)
-                _user.postValue(handledResponse)*/
-                val body: Map<String, String> = mapOf("username" to username, "fullname" to fullname, "bio" to bio)
+
+                val body: Map<String, String> = mapOf(
+                    "username" to username,
+                    "fullname" to fullname,
+                    "bio" to bio
+                )
+
                 userRepository.updateUser(body)
                 val response: Response<CurrentUSerResponse> = userRepository.updateUser(body)
                 val handledResponse: DataState<CurrentUSerResponse> = handleUsersResponse(response, true)
                 _user.postValue(handledResponse)
-
 
             } else {
                 _user.postValue(DataState.Fail(message = "No internet connection"))
@@ -265,9 +235,6 @@ class UserViewModel @Inject constructor(
         when (response.code()) {
 
             CODE_SUCCESS -> {
-                if (!userUpdated) {
-                    //  userQuoteList = response.body()!!.user!!.quotes!!.toMutableList()
-                }
                 return DataState.Success(response.body())
             }
 

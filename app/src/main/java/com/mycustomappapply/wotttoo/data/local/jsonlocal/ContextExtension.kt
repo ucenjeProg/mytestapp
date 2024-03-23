@@ -8,6 +8,7 @@ fun Context.readJsonFromAssets(
 ): String? {
 
     val jsonString: String
+
     try {
         jsonString = this.assets.open(fileName).bufferedReader().use { it.readText() }
     } catch (ioException: IOException) {
