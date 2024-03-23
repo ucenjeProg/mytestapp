@@ -1,0 +1,200 @@
+<resources>
+    <string name="app_name">MYcustomAppapply</string>
+
+    <!--  Themes  -->
+    <string name="theme_dark">Dark</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_default">Default</string>
+    <string-array name="themes">
+        <item>@string/theme_default</item>
+        <item>@string/theme_dark</item>
+        <item>@string/theme_light</item>
+    </string-array>
+
+    <string name="about_text">wotttoo is the app to share your quotes, to explore quotes shared by other users. You can follow users, quote genres to get quotes on your home page.\n\nPlease if you have any suggestions, don\'t hesitate to send your that to the developer by above. Good quotes !</string>
+    <string name="privacy_policy_text"></string>
+
+    <!--  Quote Genres  -->
+    <string name="no_genre">Select genre</string>
+    <string name="genre_love">Love</string>
+    <string name="genre_life">Life</string>
+    <string name="genre_motivation">Motivation</string>
+    <string name="genre_philosophy">Philosophy</string>
+    <string name="genre_god">God</string>
+    <string name="genre_happiness">Happiness</string>
+    <string name="genre_religion">Religion</string>
+    <string name="genre_time">Time</string>
+    <string name="genre_spirituality">Spirituality</string>
+    <string name="genre_science">Science</string>
+    <string name="genre_friendship">Friendship</string>
+    <string name="genre_family">Family</string>
+    <string name="genre_wealth">Wealth</string>
+    <string name="genre_leadership">Leadership</string>
+    <string name="genre_art">Art</string>
+    <string name="genre_business">Business</string>
+    <string name="genre_health">Health</string>
+    <string name="genre_parenting">Parenting</string>
+
+    <string-array name="quote_genres">
+        <item>@string/no_genre</item>
+        <item>@string/genre_love</item>
+        <item>@string/genre_life</item>
+        <item>@string/genre_parenting</item>
+        <item>@string/genre_health</item>
+        <item>@string/genre_art</item>
+        <item>@string/genre_business</item>
+        <item>@string/genre_family</item>
+        <item>@string/genre_friendship</item>
+        <item>@string/genre_god</item>
+        <item>@string/genre_wealth</item>
+        <item>@string/genre_happiness</item>
+        <item>@string/genre_leadership</item>
+        <item>@string/genre_motivation</item>
+        <item>@string/genre_philosophy</item>
+        <item>@string/genre_religion</item>
+        <item>@string/genre_science</item>
+        <item>@string/genre_spirituality</item>
+        <item>@string/genre_time</item>
+    </string-array>
+
+
+    <!--  Quote Genres  -->
+    <string name="book_genre_fantasy">Fantasy</string>
+    <string name="book_genre_adventure">Adventure</string>
+    <string name="book_genre_romance">Romance</string>
+    <string name="book_genre_dystpoian">Dystopian</string>
+    <string name="book_genre_historical_fiction">Historical Fiction</string>
+    <string name="book_genre_science_fiction">Science Fiction</string>
+    <string name="book_genre_art">Art</string>
+    <string name="book_genre_self_help">Self-help</string>
+    <string name="book_genre_motivational">Motivational</string>
+    <string name="book_genre_health">Health</string>
+    <string name="book_genre_spirituality">Spirituality</string>
+    <string name="book_genre_humor">Humor</string>
+    <string name="book_genre_relationship">Relationship</string>
+    <string name="book_genre_wealth">Wealth</string>
+    <string name="book_genre_leadership">Leadership</string>
+    <string name="book_genre_business">Business</string>
+    <string name="book_genre_psychology">Psychology</string>
+    <string name="book_genre_parenting">Parenting</string>
+    <string name="book_genre_classic">Classic</string>
+    <string name="book_genre_biography">Biography</string>
+    <string name="book_genre_children">Children</string>
+
+    <string-array name="book_genres">
+        <item>@string/no_genre</item>
+        <item>@string/book_genre_fantasy</item>
+        <item>@string/book_genre_adventure</item>
+        <item>@string/book_genre_romance</item>
+        <item>@string/book_genre_dystpoian</item>
+        <item>@string/book_genre_historical_fiction</item>
+        <item>@string/book_genre_science_fiction</item>
+        <item>@string/book_genre_art</item>
+        <item>@string/book_genre_self_help</item>
+        <item>@string/book_genre_motivational</item>
+        <item>@string/book_genre_health</item>
+        <item>@string/book_genre_spirituality</item>
+        <item>@string/book_genre_humor</item>
+        <item>@string/book_genre_relationship</item>
+        <item>@string/book_genre_wealth</item>
+        <item>@string/book_genre_leadership</item>
+        <item>@string/book_genre_business</item>
+        <item>@string/book_genre_psychology</item>
+        <item>@string/book_genre_parenting</item>
+        <item>@string/book_genre_classic</item>
+        <item>@string/book_genre_biography</item>
+        <item>@string/book_genre_children</item>
+    </string-array>
+
+
+    <!--    App Strings  -->
+
+    <!--  COMMON  -->
+    <string name="smthng_went_wrong">Something went wrong, please try again</string>
+
+    <!--    On Boarding-->
+    <string name="txt_welcome">Welcome</string>
+    <string name="txt_get_started">Get Started</string>
+    <string name="txt_explore_quotes">Explore Quotes</string>
+    <string name="txt_enjoy_sharing">Enjoy Sharing</string>
+    <string name="txt_splash_first">wotttoo is an app that you can share your quotes which had been taken from any book or from others.</string>
+    <string name="txt_splash_second">You can find quotes in any genre. You can follow the genres,users you would love to see in your home page.</string>
+    <string name="txt_splash_third">You can share quote both as text an image. You can customize quote image style and download it on your phone.</string>
+    <string name="txt_next">Next</string>
+    <string name="txt_continue_guest">Continue as guest</string>
+
+    <!--  Authorization  -->
+    <string name="txt_login">Login</string>
+    <string name="txt_login_description">Sign in to continue</string>
+    <string name="txt_signup">Sign Up</string>
+    <string name="txt_signup_description">Create a new account</string>
+    <string name="txt_dont_have_account">You don\'t have an account?</string>
+    <string name="txt_have_account">You already have an account?</string>
+    <string name="txt_signup_google">Sign up with Google</string>
+    <string name="txt_signin_google">Sign in with Google</string>
+    <string name="txt_select_genre">Please select a quote genre you want to get quote from</string>
+    <string name="txt_continue">Continue</string>
+
+
+    <!--  MAIN  -->
+    <string name="txt_share">Share</string>
+    <string name="share_quote">Share quote</string>
+    <string name="txt_save">Save</string>
+    <string name="txt_quotes">Quotes</string>
+    <string name="report_quote">Report quote</string>
+    <string name="report_user">Report user</string>
+    <string name="edit_quote">Edit quote</string>
+    <string name="delete_quote">Delete quote</string>
+    <string name="users">Users</string>
+    <string name="txt_following">Following</string>
+    <string name="txt_follow">Follow</string>
+    <string name="txt_not_following">Not following</string>
+    <string name="txt_followers">Followers</string>
+    <string name="no_quotes_found_in_user">No quotes found from \nthis user</string>
+    <string name="txt_add">Add</string>
+    <string name="author_warning">Please consider adding author of quote</string>
+    <string name="notification_description">%d people liked the quote you added</string>
+    <string name="txt_clear_all">Clear all</string>
+    <string name="txt_photo_style">Photo style</string>
+    <string name="txt_text_size">Text size</string>
+    <string name="txt_update">Update</string>
+    <string name="contact_with_dev">Contact with developer</string>
+
+    <string name="action_quote_addad">Komentar dodan:)</string>
+    <string name="pls_select_genre">Please select a quote genre.</string>
+    <string name="image_downloaded_successfully">Image downloaded successfully !</string>
+    <string name="image_downloaded">Image downloaded !</string>
+    <string name="quote_deleted_successfully">Quote deleted !</string>
+    <string name="reported_successfully">Quote reported !</string>
+    <string name="image_access_denied">Image not saved, because you denied the permission</string>
+    <string name="contact_not_empty">Contact field cannot be empty</string>
+    <string name="select_one">Select one</string>
+
+    <string name="change_background_color">Change background color</string>
+    <string name="change_background_image">Change background image</string>
+    <string name="change_txt_size">Change text size</string>
+
+    <!--  TOOLBAR  -->
+    <string name="title_quotes">Komentari</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_your_profile">Your profile</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_user_profile">User profile</string>
+    <string name="title_download">Download</string>
+    <string name="title_edit_user">Edit user</string>
+    <string name="title_quote">Komentar</string>
+    <string name="title_add_quote">Dodaj komentar</string>
+    <string name="title_privacy_policy">Privacy Policy</string>
+
+
+    <!--  Validation  -->
+    <string name="quote_name_validation">Quote length should be at least %d characters</string>
+    <string name="quote_name_validation_max">Quote length shouldn\'t be more than %d characters</string>
+    <string name="error_empty_username">Username can\'t be empty</string>
+    <string name="error_username">Username should at least be %d characters</string>
+    <string name="error_password">Password should at least be %d characters</string>
+    <string name="error_empty_password">Password shouldn\'t be empty</string>
+    <string name="txt_genre_warning">You should select at least %d genres</string>
+
+
+</resources>

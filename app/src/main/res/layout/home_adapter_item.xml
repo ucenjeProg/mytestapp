@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_quote_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:visibility="visible" />
+
+    <View
+        android:id="@+id/quote_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorQuoteOverlay"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/quoteTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="55dp"
+        android:fontFamily="sans-serif-light"
+        android:includeFontPadding="false"
+        android:paddingHorizontal="@dimen/page_padding"
+        android:paddingVertical="65dp"
+        android:textAlignment="center"
+        android:textColor="@color/colorQuoteText"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Your time is limited, so don't waste it living someone else's life. Don't be trapped by dogma – which is living with the results of other people's thinking.results of other people's thinking.results of other people's thinking." />
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userPhotoImageView"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/user" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/likeBtn"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="?attr/actionBarItemBackground"
+                android:padding="5dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_like"
+                app:tint="@color/colorQuoteText" />
+
+            <TextView
+                android:id="@+id/likeCountTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-4dp"
+                android:includeFontPadding="false"
+                android:text="Like"
+                android:textColor="@color/colorQuoteText" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/shareBtn"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="?attr/actionBarItemBackground"
+                android:padding="5dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_share"
+                app:tint="@color/colorQuoteText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-4dp"
+                android:includeFontPadding="false"
+                android:text="@string/txt_share"
+                android:textColor="@color/colorQuoteText" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/downloadButton"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="?attr/actionBarItemBackground"
+                android:padding="5dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_download"
+                app:tint="@color/colorQuoteText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-4dp"
+                android:includeFontPadding="false"
+                android:text="@string/txt_save"
+                android:textColor="@color/colorQuoteText" />
+
+        </LinearLayout>
+
+
+        <ImageButton
+            android:id="@+id/postOptionsBtn"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="?attr/actionBarItemBackground"
+            android:padding="5dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_more"
+            app:tint="@color/colorQuoteText" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
