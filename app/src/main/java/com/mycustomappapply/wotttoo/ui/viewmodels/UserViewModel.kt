@@ -88,7 +88,7 @@ class UserViewModel @Inject constructor(
                         _user.postValue(DataState.Loading())
                         //val id: String = userId ?: sharedPreferencesRepository.getCurrentUser().userId!!
                         //tvoj pocetni profil
-                        val response: Response<CurrentUSerResponse> = userRepository.getUser("304")
+                        val response: Response<CurrentUSerResponse> = userRepository.getUser("296")
                         val handledResponse: DataState<CurrentUSerResponse> = handleUsersResponse(response)
                         _user.postValue(handledResponse)
                     }
