@@ -2,6 +2,7 @@ package com.mycustomappapply.wotttoo.data.network
 
 import com.mycustomappapply.wotttoo.models.ArticleResponse
 import com.mycustomappapply.wotttoo.models.CurrentUSerResponse
+import com.mycustomappapply.wotttoo.models.User
 import com.mycustomappapply.wotttoo.models.UserAuth
 import com.mycustomappapply.wotttoo.models.UsersResponse
 import retrofit2.Response
@@ -53,9 +54,9 @@ interface AuthApi {
         @Path("userId") userId: String
     ): Response<UsersResponse>
 
-    @PUT("/users/")
-    suspend fun updateUser(
-        @Body body: Map<String, String>
+    @POST("/users/")
+    suspend fun createUser(
+        @Body body: User
     ): Response<CurrentUSerResponse>
 
     @PATCH("/users/")

@@ -2,11 +2,6 @@ package com.mycustomappapply.wotttoo.models
 
 import java.io.Serializable
 
-data class UsersResponseOrg(
-    val message: String,
-    val users: List<UserOrg>
-)
-
 data class UsersResponse(
     val `data`: List<User>,
     val links: Links? = null,
@@ -25,38 +20,36 @@ data class Data(
 )
 
 data class Attributes(
-    val block: Int,
-    val email: String,
-    val group_count: Int,
-    val group_names: String,
     val id: Int,
-    val lastResetTime: Any,
-    val lastvisitDate: String,
-    val name: String,
-    val registerDate: String,
-    val resetCount: Int,
-    val sendEmail: Int,
-    val username: String,
-
-
-    val fullname: String?,
-    val bio: String?,
-    var followers: List<String>?,
-    val followingUsers: List<String>?,
-    val followingGenres: List<String>?,
-    val quotes: List<Quote>?,
-    val profileImage: String?,
-    val totalQuoteCount: Int?
+    val block: Int? = null,
+    val email: String? = null,
+    val group_count: Int? = null,
+    val group_names: String? = null,
+    val lastResetTime: Any? = null,
+    val lastvisitDate: String? = null,
+    val name: String? = null,
+    val registerDate: String? = null,
+    val resetCount: Int? = null,
+    val sendEmail: Int? = null,
+    val username: String? = null,
+    val fullname: String? = null,
+    val bio: String? = null,
+    var followers: List<String>? = null,
+    val followingUsers: List<String>? = null,
+    val followingGenres: List<String>? = null,
+    val quotes: List<Quote>? = null,
+    val profileImage: String? = null,
+    val totalQuoteCount: Int? = null
 ) : Serializable
 
 
 data class User(
+    val id: String? = null,
     val attributes: Attributes? = null,
-    val id: String,
-    val type: String,
-    val username: String,
-    val fullname:String,
-    val bio: String
+    val type: String? = null,
+    val username: String? = null,
+    val fullname: String? = null,
+    val bio: String? = null
 ) : Serializable
 
 

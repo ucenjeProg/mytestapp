@@ -2,7 +2,6 @@ package com.mycustomappapply.wotttoo.ui.main.fragments.user
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,121 +19,49 @@ import com.mycustomappapply.wotttoo.models.Attributes
 import com.mycustomappapply.wotttoo.models.Quote
 import com.mycustomappapply.wotttoo.models.User
 import com.mycustomappapply.wotttoo.ui.main.MainActivity
-import com.mycustomappapply.wotttoo.ui.on_boarding.StartActivity
 import com.mycustomappapply.wotttoo.ui.viewmodels.AuthViewModel
 import com.mycustomappapply.wotttoo.ui.viewmodels.QuoteViewModel
 import com.mycustomappapply.wotttoo.ui.viewmodels.UserViewModel
 import com.mycustomappapply.wotttoo.utils.BottomNavReselectListener
 import com.mycustomappapply.wotttoo.utils.Constants.KEY_DELETED_QUOTE
 import com.mycustomappapply.wotttoo.utils.Constants.KEY_UPDATED_QUOTE
-import com.mycustomappapply.wotttoo.utils.Constants.TEXT_DIRECT_TO_LOGIN
 import com.mycustomappapply.wotttoo.utils.Constants.TEXT_UPDATED_USER
-import com.mycustomappapply.wotttoo.utils.DataState
 import com.mycustomappapply.wotttoo.utils.Screen
 import com.mycustomappapply.wotttoo.utils.gone
-import com.mycustomappapply.wotttoo.utils.invisible
-import com.mycustomappapply.wotttoo.utils.safeGone
-import com.mycustomappapply.wotttoo.utils.showToast
 import com.mycustomappapply.wotttoo.utils.toFormattedNumber
 import com.mycustomappapply.wotttoo.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(),
-    BottomNavReselectListener {
-    private val homeAdapter by lazy { HomeAdapter() }
+class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(), BottomNavReselectListener {
+
+    private val homeAdapter: HomeAdapter by lazy { HomeAdapter() }
     private val userViewModel: UserViewModel by viewModels()
     private val quoteViewModel: QuoteViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
-
     private var paginationLoading = false
     private var currentPage = 1
     private var paginationFinished = false
     private var quotesSize = 0
     private var currentUser: User? = null
-    lateinit var sharedPreferencesManager: SharedPreferencesManager
+    lateinit var shrPref: SharedPreferencesManager
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
         initBottomNavReselectListener()
-        sharedPreferencesManager= SharedPreferencesManager(requireContext())
+        shrPref = SharedPreferencesManager(view.context)
         setupClickListeners()
-        getUser()
-        subscribeObservers()
         setFragmentResultListener()
-        userViewModel.getUser(forced = true)
         setupRecyclerView()
-        Log.d("TAG", "sharedprefdata"+sharedPreferencesManager.getData("username"))
     }
 
     private fun initBottomNavReselectListener() {
         (requireActivity() as MainActivity).bottomNavItemReselectListener = this
     }
 
-    private fun getUser() {
-        if (authViewModel.isAuthenticated) {
-            userViewModel.getUser()
-        }
-    }
-
-    private fun subscribeObservers(): Unit = with(binding) {
-        userViewModel.user.observe(viewLifecycleOwner) {
-            when (it) {
-                is DataState.Success -> {
-                    hideRefreshLayoutProgress()
-                    failContainer.safeGone()
-                    toggleProgressBar(false)
-
-                    val currentUser = User(
-                        attributes = it.data?.data?.attributes,
-                        id = it.data?.data?.id ?: "0",
-                        type = it.data?.data?.type ?: "",
-                        username = "",
-                        fullname = "",
-                        bio = ""
-                    )
-
-                    quotesSize = currentUser.attributes?.quotes?.size ?: 0
-                    bindData(currentUser)
-                }
-
-                is DataState.Fail -> {
-                    hideRefreshLayoutProgress()
-                    failMessage.text = it.message
-                    failContainer.visible()
-                    toggleProgressBar(loading = false, failed = true)
-                }
-
-                is DataState.Loading -> {
-                    failContainer.safeGone()
-                    toggleProgressBar(true)
-                }
-            }
-        }
-        userViewModel.userQuotes.observe(viewLifecycleOwner) {
-            when (it) {
-                is DataState.Success -> {
-                    paginationFinished = quotesSize == it.data?.data?.size
-                    paginationLoading = false
-                    homeAdapter.setData(it.data?.data)
-                    quotesSize = it.data?.data?.size ?: 0
-                   // paginationProgressBar.invisible()
-                }
-
-                is DataState.Fail -> {
-                    showToast(it.message)
-                    paginationLoading = false
-                }
-
-                is DataState.Loading -> {
-                    paginationLoading = true
-                  //  paginationProgressBar.visible()
-                }
-            }
-        }
-    }
 
     private fun toggleProgressBar(
         loading: Boolean,
@@ -149,12 +76,14 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(),
     ): Unit = with(binding) {
 
         val userBind: Attributes? = user?.attributes
-        val username=sharedPreferencesManager.getData("username")
+
+        val username: String? =shrPref.getData("username")
+
         usernameTextView.text=username
-      /*  usernameTextView.text = when (sharedPreferencesManager.getData("username")) {
+        usernameTextView.text = when (shrPref.getData("username")) {
             null -> "Tvoj Profil"
             else -> userBind?.username
-        }*/
+        }
 
         followerCountTextView.text = when {
             userBind?.followers?.size?.toFormattedNumber() == null -> "0"
@@ -169,18 +98,20 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(),
         quoteCountTextView.text = (userBind?.totalQuoteCount ?: 0).toFormattedNumber()
 
         if (userBind?.profileImage != null && userBind.profileImage != "") {
-            userPhotoImageView.load(userBind?.profileImage) {
+            userPhotoImageView.load(userBind.profileImage) {
                 error(R.drawable.user)
             }
 
         } else {
             userPhotoImageView.load(R.drawable.user)
         }
+
         if (quotesSize == 0) {
             noQuoteFoundContainer.visible()
         } else {
             noQuoteFoundContainer.gone()
         }
+
         homeAdapter.setData(user?.attributes?.quotes ?: emptyList())
     }
 

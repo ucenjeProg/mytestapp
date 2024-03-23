@@ -3,6 +3,7 @@ package com.mycustomappapply.wotttoo.data.repositories
 import com.mycustomappapply.wotttoo.data.network.AuthApi
 import com.mycustomappapply.wotttoo.models.ArticleResponse
 import com.mycustomappapply.wotttoo.models.CurrentUSerResponse
+import com.mycustomappapply.wotttoo.models.User
 import com.mycustomappapply.wotttoo.models.UserAuth
 import com.mycustomappapply.wotttoo.models.UsersResponse
 import com.mycustomappapply.wotttoo.utils.Constants.KEY_EMAIL
@@ -41,9 +42,9 @@ class UserRepository @Inject constructor(
         genres: String
     ): Response<UserAuth> = authApi.saveFollowingGenres(genres)
 
-    suspend fun updateUser(
-        body: Map<String, String>
-    ): Response<CurrentUSerResponse> = authApi.updateUser(body)
+    suspend fun createUser(
+        body: User
+    ): Response<CurrentUSerResponse> = authApi.createUser(body)
 
     suspend fun getUser(
         userId: String

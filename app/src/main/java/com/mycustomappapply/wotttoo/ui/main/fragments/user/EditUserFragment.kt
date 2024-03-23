@@ -28,7 +28,6 @@ import com.mycustomappapply.wotttoo.utils.isValidUsername
 import com.mycustomappapply.wotttoo.utils.showToast
 import com.mycustomappapply.wotttoo.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
 
 @AndroidEntryPoint
 class EditUserFragment : BaseFragment<FragmentEditProfileBinding>() {
@@ -93,7 +92,7 @@ class EditUserFragment : BaseFragment<FragmentEditProfileBinding>() {
     ): Boolean {
         if (item.itemId == R.id.edit_profile_save_menu_item) {
             menuItem = item
-          //  item.setActionView(R.layout.progress_bar_layout)
+          //item.setActionView(R.layout.progress_bar_layout)
             updateUser()
             navigateBack()
             return true
@@ -102,17 +101,20 @@ class EditUserFragment : BaseFragment<FragmentEditProfileBinding>() {
     }
 
     private fun updateUser(): Unit = with(binding) {
+
         val username: String = usernameEditText.text.toString().trim()
         val fullName: String = fullnameEditText.text.toString().trim()
         val bio: String = bioEditText.text.toString().trim()
-        Log.d("TAG", "username"+username)
+
         sharedPreferencesManager.saveData("username",username)
         sharedPreferencesManager.saveData("fullName",fullName)
         sharedPreferencesManager.saveData("bio",bio)
+
         //no Need APi call
-        /*args.user?.let { user ->
-                  updatedUser =
-                      user.copy(username = username, fullname = fullName, bio = bio)
+        args.user?.let { user: User ->
+
+                  updatedUser = user.copy(username = username, fullname = fullName, bio = bio)
+
                   if (user.username != username || user.fullname != fullName || user.bio != bio) {
                       if (!username.isValidUsername()) {
                           updateProfileErrorTextView.visible()
@@ -124,18 +126,10 @@ class EditUserFragment : BaseFragment<FragmentEditProfileBinding>() {
                           return@with
                       }
                   }
+
             authViewModel.currentUser = authViewModel.currentUser?.copy(username = username)
-            authViewModel.updateUser()
-            userViewModel.updateUser(username, fullName, bio)
-        }*/
-        /* else {
-                parentFragmentManager.setFragmentResult(
-                    TEXT_UPDATED_USER,
-                    bundleOf(TEXT_UPDATED_USER to updatedUser)
-                )
-                findNavController().popBackStack()
-            }
-        }*/
+            userViewModel.createUser(username, fullName, bio)
+        }
 
     }
 
