@@ -13,6 +13,7 @@ import com.google.gson.Gson
 import com.mycustomappapply.wotttoo.data.local.SharedPreferencesRepository
 import com.mycustomappapply.wotttoo.data.repositories.UserRepository
 import com.mycustomappapply.wotttoo.models.ArticleResponse
+import com.mycustomappapply.wotttoo.models.Attributes
 import com.mycustomappapply.wotttoo.models.BasicResponse
 import com.mycustomappapply.wotttoo.models.CurrentUSerResponse
 import com.mycustomappapply.wotttoo.models.Quote
@@ -30,6 +31,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
@@ -165,7 +167,7 @@ class UserViewModel @Inject constructor(
         }
 
 
-    fun updateUser(
+    fun createUser(
         username: String,
         fullname: String,
         bio: String
@@ -173,14 +175,23 @@ class UserViewModel @Inject constructor(
         try {
             if (hasInternetConnection()) {
 
+                val id: Int = Random.nextInt(300, 1000000)
+
                 val body: Map<String, String> = mapOf(
+
                     "username" to username,
                     "fullname" to fullname,
                     "bio" to bio
                 )
 
-                userRepository.updateUser(body)
-                val response: Response<CurrentUSerResponse> = userRepository.updateUser(body)
+                val newUser = User(
+                    attributes = Attributes(id = id),
+                    username = username,
+                    fullname = fullname
+                )
+
+
+                val response: Response<CurrentUSerResponse> = userRepository.createUser(newUser)
                 val handledResponse: DataState<CurrentUSerResponse> = handleUsersResponse(response, true)
                 _user.postValue(handledResponse)
 

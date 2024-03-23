@@ -53,7 +53,7 @@ class SearchUsersFragment :
                 (requireActivity() as MainActivity).dismissSearchKeyboard()
             }
             val action: SearchFragmentDirections.ActionSearchFragmentToUserProfileFragment =
-                SearchFragmentDirections.actionSearchFragmentToUserProfileFragment(user.id)
+                SearchFragmentDirections.actionSearchFragmentToUserProfileFragment(user.id!!)
             findNavController().navigate(action)
 
         }

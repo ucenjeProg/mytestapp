@@ -28,7 +28,6 @@ import com.mycustomappapply.wotttoo.utils.isValidUsername
 import com.mycustomappapply.wotttoo.utils.showToast
 import com.mycustomappapply.wotttoo.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
 
 @AndroidEntryPoint
 class EditUserFragment : BaseFragment<FragmentEditProfileBinding>() {
@@ -109,8 +108,9 @@ class EditUserFragment : BaseFragment<FragmentEditProfileBinding>() {
         sharedPreferencesManager.saveData("username",username)
         sharedPreferencesManager.saveData("fullName",fullName)
         sharedPreferencesManager.saveData("bio",bio)
+
         //no Need APi call
-        /*args.user?.let { user ->
+        args.user?.let { user ->
                   updatedUser =
                       user.copy(username = username, fullname = fullName, bio = bio)
                   if (user.username != username || user.fullname != fullName || user.bio != bio) {
@@ -125,17 +125,8 @@ class EditUserFragment : BaseFragment<FragmentEditProfileBinding>() {
                       }
                   }
             authViewModel.currentUser = authViewModel.currentUser?.copy(username = username)
-            authViewModel.updateUser()
-            userViewModel.updateUser(username, fullName, bio)
-        }*/
-        /* else {
-                parentFragmentManager.setFragmentResult(
-                    TEXT_UPDATED_USER,
-                    bundleOf(TEXT_UPDATED_USER to updatedUser)
-                )
-                findNavController().popBackStack()
-            }
-        }*/
+            userViewModel.createUser(username, fullName, bio)
+        }
 
     }
 
