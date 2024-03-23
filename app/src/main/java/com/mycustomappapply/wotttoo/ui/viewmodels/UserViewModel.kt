@@ -13,11 +13,11 @@ import com.google.gson.Gson
 import com.mycustomappapply.wotttoo.data.local.SharedPreferencesRepository
 import com.mycustomappapply.wotttoo.data.repositories.UserRepository
 import com.mycustomappapply.wotttoo.models.ArticleResponse
-import com.mycustomappapply.wotttoo.models.Attributes
 import com.mycustomappapply.wotttoo.models.BasicResponse
 import com.mycustomappapply.wotttoo.models.CurrentUSerResponse
 import com.mycustomappapply.wotttoo.models.Quote
 import com.mycustomappapply.wotttoo.models.User
+import com.mycustomappapply.wotttoo.models.UserRequest
 import com.mycustomappapply.wotttoo.models.UsersResponse
 import com.mycustomappapply.wotttoo.utils.Constants.CODE_AUTHENTICATION_FAIL
 import com.mycustomappapply.wotttoo.utils.Constants.CODE_CREATION_SUCCESS
@@ -168,22 +168,21 @@ class UserViewModel @Inject constructor(
 
 
     fun createUser(
-        username: String,
-        fullname: String,
-        bio: String
+        name: String
     ): Job = viewModelScope.launch(Dispatchers.IO) {
         try {
             if (hasInternetConnection()) {
 
-                val id: Int = Random.nextInt(300, 1000000)
+                val id: String = Random.nextInt(300, 1000000).toString()
 
-                val newUser = User(
-                    attributes = Attributes(id = id),
-                    username = username,
-                    fullname = fullname
+                val newUserRequest = UserRequest(
+                    email = "$id@mail.com",
+                    groups = listOf("2"),
+                    name = name,
+                    username = id
                 )
 
-                val response: Response<CurrentUSerResponse> = userRepository.createUser(newUser)
+                val response: Response<CurrentUSerResponse> = userRepository.createUser(newUserRequest)
                 val handledResponse: DataState<CurrentUSerResponse> = handleUsersResponse(response, true)
                 _user.postValue(handledResponse)
 

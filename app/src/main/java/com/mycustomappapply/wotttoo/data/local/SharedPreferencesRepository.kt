@@ -41,7 +41,7 @@ class SharedPreferencesRepository @Inject constructor(
     ) {
         if (user == null) return
         editor.putString("userId", user.userId)
-        editor.putString("token", "c2hhMjU2OjI5NjoyYTIzZWM4YzQ2Y2I2NWU1OTY1NDk4NjU4YjA5YzRhMWFmODdkZDFmMjJiZTZkOThkOTRiZmEwMjBlZDAxMDBk")
+        editor.putString("token", "c2hhMjU2OjI5NjoyMmZhOWQ5OWFmNGVlNjUyZTRhOTQxMzE3NDc2NjQ0MWE3NjI4ZTg4N2Y4ODM3MjI2ZjZmYjA1MzM1NTRiNjBh")
         editor.putString("username", user.username)
         editor.putString("email", user.email)
         editor.putString("profileImage", user.profileImage)

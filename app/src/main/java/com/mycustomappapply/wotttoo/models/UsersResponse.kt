@@ -49,8 +49,19 @@ data class User(
     val type: String? = null,
     val username: String? = null,
     val fullname: String? = null,
+    val name: String? = null,
     val bio: String? = null
 ) : Serializable
+
+
+
+data class UserRequest(
+    val email: String,
+    val groups: List<String>,
+    val name: String,
+    val username: String
+): Serializable
+
 
 
 data class Links(

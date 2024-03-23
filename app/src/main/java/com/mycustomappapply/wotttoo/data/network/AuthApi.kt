@@ -4,6 +4,7 @@ import com.mycustomappapply.wotttoo.models.ArticleResponse
 import com.mycustomappapply.wotttoo.models.CurrentUSerResponse
 import com.mycustomappapply.wotttoo.models.User
 import com.mycustomappapply.wotttoo.models.UserAuth
+import com.mycustomappapply.wotttoo.models.UserRequest
 import com.mycustomappapply.wotttoo.models.UsersResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -54,9 +55,10 @@ interface AuthApi {
         @Path("userId") userId: String
     ): Response<UsersResponse>
 
-    @POST("/users/")
+    @POST("/joomlaTest/joomla/api/index.php/v1/users")
     suspend fun createUser(
-        @Body body: User
+        @Body body: UserRequest,
+        @Header("Accept") acceptHeader: String = "application/vnd.api+json",
     ): Response<CurrentUSerResponse>
 
     @PATCH("/users/")

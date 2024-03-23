@@ -1,32 +1,24 @@
 package com.mycustomappapply.wotttoo.ui.main.fragments.user
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mycustomappapply.wotttoo.R
 import com.mycustomappapply.wotttoo.base.BaseFragment
 import com.mycustomappapply.wotttoo.data.local.SharedPreferencesManager
 import com.mycustomappapply.wotttoo.databinding.FragmentEditProfileBinding
-import com.mycustomappapply.wotttoo.models.CurrentUSerResponse
 import com.mycustomappapply.wotttoo.models.User
 import com.mycustomappapply.wotttoo.ui.viewmodels.AuthViewModel
 import com.mycustomappapply.wotttoo.ui.viewmodels.UserViewModel
 import com.mycustomappapply.wotttoo.utils.Constants.MIN_USERNAME_LENGTH
-import com.mycustomappapply.wotttoo.utils.Constants.TEXT_UPDATED_USER
-import com.mycustomappapply.wotttoo.utils.DataState
-import com.mycustomappapply.wotttoo.utils.gone
 import com.mycustomappapply.wotttoo.utils.isValidUsername
-import com.mycustomappapply.wotttoo.utils.showToast
 import com.mycustomappapply.wotttoo.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,16 +35,11 @@ class EditUserFragment : BaseFragment<FragmentEditProfileBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
-        sharedPreferencesManager= SharedPreferencesManager(view.context)
+        sharedPreferencesManager = SharedPreferencesManager(view.context)
         setupUi()
-        subscribeObservers()
     }
 
     private fun setupUi() = with(binding) {
-
-        usernameEditText.setText(args.user?.username)
-        bioEditText.setText(args.user?.bio)
-        fullnameEditText.setText(args.user?.fullname)
         maxCharactersTextView.text = "${args.user?.bio?.length}/150"
 
         bioEditText.addTextChangedListener {
@@ -60,28 +47,6 @@ class EditUserFragment : BaseFragment<FragmentEditProfileBinding>() {
         }
     }
 
-    private fun subscribeObservers(): Unit = with(binding) {
-
-        userViewModel.user.observe(viewLifecycleOwner) {dataState: DataState<CurrentUSerResponse> ->
-            when (dataState) {
-                is DataState.Success -> {
-                    updateProfileErrorTextView.gone()
-                    parentFragmentManager.setFragmentResult(
-                        TEXT_UPDATED_USER,
-                        bundleOf(TEXT_UPDATED_USER to updatedUser)
-                    )
-                    findNavController().popBackStack()
-                }
-
-                is DataState.Fail -> {
-                    updateProfileErrorTextView.visible()
-                    updateProfileErrorTextView.text = dataState.message
-                    menuItem?.actionView = null
-                    showToast(dataState.message)
-                }
-            }
-        }
-    }
 
     override fun onCreateOptionsMenu(
         menu: Menu,
@@ -110,30 +75,9 @@ class EditUserFragment : BaseFragment<FragmentEditProfileBinding>() {
         val fullName: String = fullnameEditText.text.toString().trim()
         val bio: String = bioEditText.text.toString().trim()
 
-        sharedPreferencesManager.saveData("username",username)
-        sharedPreferencesManager.saveData("fullName",fullName)
-        sharedPreferencesManager.saveData("bio",bio)
-
-        //no Need APi call
-        args.user?.let { user: User ->
-
-                  updatedUser = user.copy(username = username, fullname = fullName, bio = bio)
-
-                  if (user.username != username || user.fullname != fullName || user.bio != bio) {
-                      if (!username.isValidUsername()) {
-                          updateProfileErrorTextView.visible()
-                          updateProfileErrorTextView.text = getString(
-                              R.string.error_username,
-                              MIN_USERNAME_LENGTH
-                          )
-                          menuItem?.actionView = null
-                          return@with
-                      }
-                  }
-
-            authViewModel.currentUser = authViewModel.currentUser?.copy(username = username)
-
-        }
+        sharedPreferencesManager.saveData("username", username)
+        sharedPreferencesManager.saveData("fullName", fullName)
+        sharedPreferencesManager.saveData("bio", bio)
 
     }
 

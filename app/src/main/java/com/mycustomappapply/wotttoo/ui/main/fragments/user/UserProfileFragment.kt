@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -64,27 +63,29 @@ class UserProfileFragment :
         savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
-        sharedPreferencesManager= SharedPreferencesManager(requireContext())
+        sharedPreferencesManager = SharedPreferencesManager(requireContext())
         setupClickListeners()
         setupRecyclerView()
         subscribeObservers()
         setHasOptionsMenu(true)
 
         userViewModel.getUser(args.userId)
-        Log.d("getUsernamedfdf",sharedPreferencesManager.getData("username").toString() )
+        Log.d("getUsernamedfdf", sharedPreferencesManager.getData("username").toString())
     }
 
 
     private fun bindData(userNovi: User): Unit = with(binding) {
 
         val user: Attributes? = userNovi.attributes
-        Log.d("getUsername",sharedPreferencesManager.getData("username").toString() )
+        Log.d("getUsername", sharedPreferencesManager.getData("username").toString())
         usernameTextView.text = sharedPreferencesManager.getData("username")
-        bioTextView.text = if ( sharedPreferencesManager.getData("bio")?.isNotEmpty() == true) sharedPreferencesManager.getData("bio") else ""
+        bioTextView.text =
+            if (sharedPreferencesManager.getData("bio")?.isNotEmpty() == true) sharedPreferencesManager.getData("bio") else ""
         if (user == null) return@with
-        Log.d("getUsername",sharedPreferencesManager.getData("username").toString() )
+        Log.d("getUsername", sharedPreferencesManager.getData("username").toString())
         usernameTextView.text = sharedPreferencesManager.getData("username")
-        bioTextView.text = if ( sharedPreferencesManager.getData("bio")?.isNotEmpty() == true) sharedPreferencesManager.getData("bio") else ""
+        bioTextView.text =
+            if (sharedPreferencesManager.getData("bio")?.isNotEmpty() == true) sharedPreferencesManager.getData("bio") else ""
         followerCountTextView.text = user.followers?.size?.toFormattedNumber()
         followingCountTextView.text = user.followingUsers?.size?.toFormattedNumber()
         quoteCountTextView.text = (user.totalQuoteCount ?: 0).toFormattedNumber()
@@ -137,7 +138,7 @@ class UserProfileFragment :
                         id = it.data?.data?.id ?: "0",
                         type = it.data?.data?.type ?: "",
                         username = "12",
-                        fullname = "22",
+                        name = "22",
                         bio = "55"
                     )
 
@@ -165,11 +166,11 @@ class UserProfileFragment :
         userViewModel.userQuotes.observe(viewLifecycleOwner) {
             when (it) {
                 is DataState.Success -> {
-                          paginatingFinished = quotesSize == it.data?.data?.size
-                          paginationProgressBar.safeInvisible()
-                          paginationLoading = false
-                          homeAdapter.setData(it.data?.data?.toList())
-                          quotesSize = it.data?.data?.size?.toInt() ?: 0
+                    paginatingFinished = quotesSize == it.data?.data?.size
+                    paginationProgressBar.safeInvisible()
+                    paginationLoading = false
+                    homeAdapter.setData(it.data?.data?.toList())
+                    quotesSize = it.data?.data?.size?.toInt() ?: 0
                 }
 
                 is DataState.Fail -> {

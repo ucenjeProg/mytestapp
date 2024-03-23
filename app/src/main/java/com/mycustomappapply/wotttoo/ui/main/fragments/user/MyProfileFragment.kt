@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
@@ -16,6 +18,7 @@ import com.mycustomappapply.wotttoo.base.BaseFragment
 import com.mycustomappapply.wotttoo.data.local.SharedPreferencesManager
 import com.mycustomappapply.wotttoo.databinding.FragmentMyProfileBinding
 import com.mycustomappapply.wotttoo.models.Attributes
+import com.mycustomappapply.wotttoo.models.CurrentUSerResponse
 import com.mycustomappapply.wotttoo.models.Quote
 import com.mycustomappapply.wotttoo.models.User
 import com.mycustomappapply.wotttoo.ui.main.MainActivity
@@ -26,11 +29,15 @@ import com.mycustomappapply.wotttoo.utils.BottomNavReselectListener
 import com.mycustomappapply.wotttoo.utils.Constants.KEY_DELETED_QUOTE
 import com.mycustomappapply.wotttoo.utils.Constants.KEY_UPDATED_QUOTE
 import com.mycustomappapply.wotttoo.utils.Constants.TEXT_UPDATED_USER
+import com.mycustomappapply.wotttoo.utils.DataState
 import com.mycustomappapply.wotttoo.utils.Screen
 import com.mycustomappapply.wotttoo.utils.gone
+import com.mycustomappapply.wotttoo.utils.showToast
 import com.mycustomappapply.wotttoo.utils.toFormattedNumber
 import com.mycustomappapply.wotttoo.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(), BottomNavReselectListener {
@@ -44,7 +51,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(), BottomNavRes
     private var paginationFinished = false
     private var quotesSize = 0
     private var currentUser: User? = null
-    lateinit var shrPref: SharedPreferencesManager
+    private lateinit var shrPref: SharedPreferencesManager
 
     override fun onViewCreated(
         view: View,
@@ -54,14 +61,13 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(), BottomNavRes
         initBottomNavReselectListener()
         shrPref = SharedPreferencesManager(view.context)
         setupClickListeners()
-        setFragmentResultListener()
-        setupRecyclerView()
+        bindData()
+        //setupRecyclerView()
     }
 
     private fun initBottomNavReselectListener() {
         (requireActivity() as MainActivity).bottomNavItemReselectListener = this
     }
-
 
     private fun toggleProgressBar(
         loading: Boolean,
@@ -71,44 +77,31 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(), BottomNavRes
         binding.profileContent.visibility = if (loading || failed) View.INVISIBLE else View.VISIBLE
     }
 
-    private fun bindData(
-        user: User?
-    ): Unit = with(binding) {
+    private fun bindData(): Unit = with(binding) {
 
-        val userBind: Attributes? = user?.attributes
+        val username: String = shrPref.getData("username") ?: ""
+        val fullName: String = shrPref.getData("fullName") ?: ""
+        val bio: String = shrPref.getData("bio") ?: ""
 
-        val username: String =shrPref.getData("username") ?: ""
-        val fullName: String =shrPref.getData("fullName") ?: ""
-        val bio: String =shrPref.getData("bio") ?: ""
+        lifecycleScope.launch() {
+            toggleProgressBar(true)
+            userViewModel.createUser(username)
+            toggleProgressBar(false)
+        }
 
-        userViewModel.createUser(username, fullName, bio)
+        noQuoteFoundContainer.gone()
 
-        usernameTextView.text=username
+
+        usernameTextView.text = username
         usernameTextView.text = when (shrPref.getData("username")) {
             null -> "Tvoj Profil"
-            else -> userBind?.username
+            else -> shrPref.getData("username")
         }
 
-        followerCountTextView.text = when {
-            userBind?.followers?.size?.toFormattedNumber() == null -> "0"
-            else -> userBind.followers?.size?.toFormattedNumber()
-        }
+        followerCountTextView.text = "100"
+        followingCountTextView.text = "200"
+        quoteCountTextView.text = "300"
 
-        followingCountTextView.text = when {
-            userBind?.followingUsers?.size == null -> "0"
-            else -> userBind.followingUsers.size.toString()
-        }
-
-        quoteCountTextView.text = (userBind?.totalQuoteCount ?: 0).toFormattedNumber()
-
-        if (userBind?.profileImage != null && userBind.profileImage != "") {
-            userPhotoImageView.load(userBind.profileImage) {
-                error(R.drawable.user)
-            }
-
-        } else {
-            userPhotoImageView.load(R.drawable.user)
-        }
 
         if (quotesSize == 0) {
             noQuoteFoundContainer.visible()
@@ -116,15 +109,13 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(), BottomNavRes
             noQuoteFoundContainer.gone()
         }
 
-        homeAdapter.setData(user?.attributes?.quotes ?: emptyList())
+     //   homeAdapter.setData(user?.attributes?.quotes ?: emptyList())
     }
-
 
 
     private fun hideRefreshLayoutProgress() {
         if (binding.refreshLayout.isRefreshing) binding.refreshLayout.isRefreshing = false
     }
-
 
 
     private fun setupClickListeners(): Unit = with(binding) {
@@ -143,36 +134,6 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(), BottomNavRes
             userViewModel.getUser(forced = true)
         }
     }
-
-
-
-    private fun setFragmentResultListener() {
-
-        parentFragmentManager.setFragmentResultListener(
-            KEY_DELETED_QUOTE,
-            viewLifecycleOwner
-        ) { requestKey: String, deletedQuote: Bundle ->
-            userViewModel.notifyQuoteRemoved(deletedQuote[KEY_DELETED_QUOTE] as Quote)
-        }
-
-        parentFragmentManager.setFragmentResultListener(
-            KEY_UPDATED_QUOTE,
-            viewLifecycleOwner
-        ) { s: String, updatedQuote: Bundle ->
-            userViewModel.notifyQuoteUpdated((updatedQuote[KEY_UPDATED_QUOTE] as Quote))
-        }
-
-        parentFragmentManager.setFragmentResultListener(
-            TEXT_UPDATED_USER,
-            viewLifecycleOwner
-        ) { s: String, updatedUser: Bundle ->
-            binding.apply {
-                currentUser = updatedUser[TEXT_UPDATED_USER] as User
-                bindData(currentUser)
-            }
-        }
-    }
-
 
 
     private fun setupRecyclerView() {
