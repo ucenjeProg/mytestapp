@@ -60,59 +60,12 @@ class UserViewModel @Inject constructor(
         userId: String? = null,
         page: Int
     ): Job = viewModelScope.launch(Dispatchers.IO) {
-            if (hasInternetConnection()) {
-                try {
-                    _userQuotes.postValue(DataState.Loading())
-                    val id: String = userId ?: shrdPrefMngr.getCurrentUser()?.userId!!
-                    val response: Response<ArticleResponse> = userRepository.getMoreUserQuotes(id, page)
-                    handleQuoteResponse(response)
-                } catch (e: Exception) {
-                    _userQuotes.postValue(DataState.Fail())
-                }
-            } else {
-                _userQuotes.postValue(DataState.Fail(message = "No internet connection"))
-            }
-
-        }
-
-    fun getUser(
-        userId: String? = null,
-        forced: Boolean = false
-    ): Job = viewModelScope.launch(Dispatchers.IO) {
-            if (hasInternetConnection()) {
-                try {
-                    if (_user.value == null || forced) {
-                        _user.postValue(DataState.Loading())
-                        val response: Response<CurrentUSerResponse> = userRepository.getUser("296")
-                        val handledResponse: DataState<CurrentUSerResponse> = handleUsersResponse(response)
-                        _user.postValue(handledResponse)
-                    }
-                } catch (e: Exception) {
-                    _user.postValue(DataState.Fail())
-                }
-            } else {
-                _user.postValue(DataState.Fail(message = "No internet connection"))
-            }
-
-        }
-
-    fun notifyQuoteRemoved(
-        quote: Quote
-    ) {
-        userQuoteList.remove(quote)
-    }
-
-    fun notifyQuoteUpdated(
-        quote: Quote
-    ): Job = viewModelScope.launch(Dispatchers.Default) {
         if (hasInternetConnection()) {
             try {
-                val quoteToDelete: Quote? = userQuoteList.find { q -> q.id == quote.id }
-                val index: Int = userQuoteList.indexOf(quoteToDelete)
-                if (index != -1) {
-                    userQuoteList.remove(quoteToDelete)
-                    userQuoteList.add(index, quote)
-                }
+                _userQuotes.postValue(DataState.Loading())
+                val id: String = userId ?: shrdPrefMngr.getCurrentUser()?.userId!!
+                val response: Response<ArticleResponse> = userRepository.getMoreUserQuotes(id, page)
+                handleQuoteResponse(response)
             } catch (e: Exception) {
                 _userQuotes.postValue(DataState.Fail())
             }
@@ -122,97 +75,112 @@ class UserViewModel @Inject constructor(
 
     }
 
+    fun getUser(
+        userId: String? = null,
+        forced: Boolean = false
+    ): Job = viewModelScope.launch(Dispatchers.IO) {
+        if (hasInternetConnection()) {
+            try {
+                if (_user.value == null || forced) {
+                    _user.postValue(DataState.Loading())
+                    val response: Response<CurrentUSerResponse> = userRepository.getUser("296")
+                    val handledResponse: DataState<CurrentUSerResponse> = handleUsersResponse(response)
+                    _user.postValue(handledResponse)
+                }
+            } catch (e: Exception) {
+                _user.postValue(DataState.Fail())
+            }
+        } else {
+            _user.postValue(DataState.Fail(message = "No internet connection"))
+        }
+
+    }
+
     fun getUsers(
         searchQuery: String = "",
         paginating: Boolean = false,
         currentPage: Int = 1
     ): Job = viewModelScope.launch(Dispatchers.IO) {
-            if (hasInternetConnection()) {
-                try {
-                    _users.postValue(DataState.Loading())
-                    val response: Response<UsersResponse> = userRepository.getUsers()
+        if (hasInternetConnection()) {
+            try {
+                _users.postValue(DataState.Loading())
+                val response: Response<UsersResponse> = userRepository.getUsers()
 
-                    when (response.code()) {
-
-                        CODE_SUCCESS -> {
-                            if (paginating) {
-                                response.body()?.data?.forEach { user: User ->
-                                    usersList.add(user)
-                                }
-                            } else {
-                                usersList = response.body()?.data?.toMutableList() ?: mutableListOf()
+                when (response.code()) {
+                    CODE_SUCCESS -> {
+                        if (paginating) {
+                            response.body()?.data?.forEach { user: User ->
+                                usersList.add(user)
                             }
-                            _users.postValue(
-                                DataState.Success(
-                                    UsersResponse(
-                                        data = usersList
-                                    )
+                        } else {
+                            usersList = response.body()?.data?.toMutableList() ?: mutableListOf()
+                        }
+                        _users.postValue(
+                            DataState.Success(
+                                UsersResponse(
+                                    data = usersList
                                 )
                             )
-                        }
-
-                        CODE_SERVER_ERROR -> {
-                            _users.postValue(DataState.Fail(message = "Server error"))
-                        }
+                        )
                     }
 
-
-                } catch (e: Exception) {
-                    _users.postValue(DataState.Fail())
+                    CODE_SERVER_ERROR -> {
+                        _users.postValue(DataState.Fail(message = "Server error"))
+                    }
                 }
-            } else {
-                _users.postValue(DataState.Fail(message = "No internet connection"))
+
+            } catch (e: Exception) {
+                _users.postValue(DataState.Fail())
             }
-
-        }
-
-
-    fun createUser(
-        name: String
-    ): Job = viewModelScope.launch(Dispatchers.IO) {
-        try {
-            if (hasInternetConnection()) {
-
-                val id: String = Random.nextInt(300, 1000000).toString()
-
-                val newUserRequest = UserRequest(
-                    email = "$id@mail.com",
-                    groups = listOf("2"),
-                    name = name,
-                    username = id
-                )
-
-                val response: Response<CurrentUSerResponse> = userRepository.createUser(newUserRequest)
-                val handledResponse: DataState<CurrentUSerResponse> = handleUsersResponse(response, true)
-                _user.postValue(handledResponse)
-
-            } else {
-                _user.postValue(DataState.Fail(message = "No internet connection"))
-            }
-        } catch (e: Exception) {
-            _user.postValue(DataState.Fail(message = "Something went wrong: ${e.cause}"))
+        } else {
+            _users.postValue(DataState.Fail(message = "No internet connection"))
         }
     }
+
+    fun userExist(name: String): Boolean {
+        getUsers()
+        return usersList.any { user -> user.attributes?.name == name }
+    }
+
+
+    fun createUser(name: String): Job = viewModelScope.launch(Dispatchers.IO) {
+        if (!hasInternetConnection()) {
+            _user.postValue(DataState.Fail(message = "No internet connection"))
+            return@launch
+        }
+
+        // Call getUsers and wait for it to complete
+        getUsers().join()
+
+        // After getUsers completes, check if the user exists
+        if (userExist(name)) {
+            _user.postValue(DataState.Fail(message = "User already exists"))
+            return@launch
+        }
+
+        val id: String = Random.nextInt(300, 1000000).toString()
+        val newUserRequest = UserRequest(
+            email = "$id@mail.com",
+            groups = listOf("2"),
+            name = name,
+            username = id
+        )
+
+        val response: Response<CurrentUSerResponse> = userRepository.createUser(newUserRequest)
+        val handledResponse: DataState<CurrentUSerResponse> = handleUsersResponse(response, true)
+        _user.postValue(handledResponse)
+    }
+
 
     private fun handleQuoteResponse(
         response: Response<ArticleResponse>
     ) {
-
         when (response.code()) {
-
             CODE_SUCCESS -> {
                 response.body()?.data?.forEach { quote: Quote ->
                     userQuoteList.add(quote)
                 }
                 _userQuotes.postValue(DataState.Success(ArticleResponse(userQuoteList)))
-            }
-
-            CODE_CREATION_SUCCESS -> {
-
-            }
-
-            CODE_VALIDATION_FAIL -> {
-
             }
 
             CODE_SERVER_ERROR -> {
@@ -234,8 +202,8 @@ class UserViewModel @Inject constructor(
         response: Response<CurrentUSerResponse>,
         userUpdated: Boolean = false
     ): DataState<CurrentUSerResponse> {
-        when (response.code()) {
 
+        when (response.code()) {
             CODE_SUCCESS -> {
                 return DataState.Success(response.body())
             }
