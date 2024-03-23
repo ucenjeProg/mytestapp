@@ -95,6 +95,7 @@ class EditUserFragment : BaseFragment<FragmentEditProfileBinding>() {
             menuItem = item
           //  item.setActionView(R.layout.progress_bar_layout)
             updateUser()
+            navigateBack()
             return true
         }
         return super.onOptionsItemSelected(item)
