@@ -1,7 +1,7 @@
-package com.mycustomappapply.wotttoo.models;
+package com.mycustomappapply.wotttoo.models
 
-public class Message {
-    String message;
-    User sender;
-    long createdAt;
+class Message {
+    var message: String? = null
+    var sender: User? = null
+    var createdAt: Long = 0
 }
