@@ -130,9 +130,9 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(), BottomNavRes
             findNavController().navigate(action)
         }
 
-        tryAgainButton.setOnClickListener {
+        /*tryAgainButton.setOnClickListener {
             userViewModel.getUser(forced = true)
-        }
+        }*/
     }
 
 
