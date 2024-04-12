@@ -21,6 +21,7 @@ import com.mycustomappapply.wotttoo.R
 import com.mycustomappapply.wotttoo.databinding.ActivityMainBinding
 import com.mycustomappapply.wotttoo.databinding.DrawerHeaderLayoutBinding
 import com.mycustomappapply.wotttoo.models.UserAuth
+import com.mycustomappapply.wotttoo.ui.activitise.MessagingUIActivity
 import com.mycustomappapply.wotttoo.ui.on_boarding.StartActivity
 import com.mycustomappapply.wotttoo.ui.viewmodels.AuthViewModel
 import com.mycustomappapply.wotttoo.ui.viewmodels.SharedViewModel
@@ -93,6 +94,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         setupBottomNavChangeListeners()
         setupDrawerNavChangeListener()
         addSearchInputTextChangeListener()
+        binding.messangerBtn.setOnClickListener {
+            startActivity(Intent(this,MessagingUIActivity::class.java))
+        }
     }
 
     private fun initViewModels() {

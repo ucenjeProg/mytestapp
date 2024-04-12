@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.mycustomappapply.wotttoo.di.MyApplication"
+        android:name=".di.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -16,6 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyCustomApp"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ui.activitise.MessagingUIActivity"
+            android:exported="false" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -26,9 +30,9 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name="com.mycustomappapply.wotttoo.ui.main.MainActivity" />
+        <activity android:name=".ui.main.MainActivity" />
         <activity
-            android:name="com.mycustomappapply.wotttoo.ui.on_boarding.StartActivity"
+            android:name=".ui.on_boarding.StartActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/SplashTheme">

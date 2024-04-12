@@ -1,5 +1,7 @@
 package com.mycustomappapply.wotttoo.di
 
+import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
+import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import com.mycustomappapply.wotttoo.data.network.AuthApi
 import com.mycustomappapply.wotttoo.data.network.MainApi
 import com.mycustomappapply.wotttoo.data.network.MyOkHttpClientInterceptor
@@ -8,6 +10,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -30,9 +33,14 @@ object NetworkModule {
             level = HttpLoggingInterceptor.Level.BODY
         }
 
+        val networkFlipperPlugin: NetworkFlipperPlugin by lazy {
+            NetworkFlipperPlugin()
+        }
+
         return OkHttpClient.Builder()
             .addInterceptor(myOkHttpClientInterceptor)
             .addInterceptor(loggingInterceptor)
+            .addInterceptor(FlipperOkhttpInterceptor(networkFlipperPlugin))
             .build()
     }
 

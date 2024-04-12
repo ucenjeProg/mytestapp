@@ -9,6 +9,7 @@ object Constants {
     const val CODE_VALIDATION_FAIL = 422
     const val CODE_AUTHENTICATION_FAIL = 401
     const val CODE_SERVER_ERROR = 500
+    //newCode
     const val API_URL = "https://nasi-u-njemackoj.com/joomlaTest/"
 
     //const val ADMIN_ID = "60670d9b34d95b1a30dc8c0d"

@@ -5,11 +5,16 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
+import android.os.Build
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.RequiresApi
 import com.google.gson.Gson
 import com.mycustomappapply.wotttoo.models.BasicResponse
 import retrofit2.Response
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 
 object Utils {
     fun <T> toBasicResponse(response: Response<T>): BasicResponse {
@@ -49,5 +54,12 @@ object Utils {
         val inputManager: InputMethodManager =
             view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputManager.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun formatDateTime(dateTime: LocalDateTime): String? {
+        // Define the desired date time format
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        // Format the date time
+        return dateTime.format(formatter)
     }
 }
